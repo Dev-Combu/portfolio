@@ -1,0 +1,21 @@
+name: github pages deploy
+on:
+  push:
+    branches: [gh-pages] # main에 푸시하면 자동 실행
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          
+      - run: flutter build web --release --base-href "/portfolio/"
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web # 빌드된 폴더만 배포 브랜치로 보냄
