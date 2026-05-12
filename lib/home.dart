@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "앱 개발자 차부곤입니다!",
+                      "앱 개발자 차부곤입니다",
                       style: TextStyle(
                         fontSize: isMobile ? 40 : 64,
                         fontWeight: FontWeight.w800,
