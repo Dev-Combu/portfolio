@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
 
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(24),
             side: BorderSide(
               color: isDark ? Colors.white10 : Colors.black12,
               width: 1,
@@ -51,10 +51,9 @@ class _HomePageState extends State<HomePage> {
             horizontal: isModalMobile ? 20 : screenWidth * 0.2,
             vertical: 40,
           ),
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 850),
-            padding: const EdgeInsets.all(32),
-            child: SingleChildScrollView(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -62,16 +61,14 @@ class _HomePageState extends State<HomePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(
-                          project.title,
-                          style: TextStyle(
-                            fontSize: isModalMobile ? 26 : 32,
-                            fontWeight: FontWeight.w900,
-                            color: isDark
-                                ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
-                          ),
+                      Text(
+                        project.title,
+                        style: TextStyle(
+                          fontSize: isModalMobile ? 28 : 36,
+                          fontWeight: FontWeight.w900,
+                          color: isDark
+                              ? AppColors.darkTextPrimary
+                              : AppColors.lightTextPrimary,
                         ),
                       ),
                       IconButton(
@@ -86,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 24),
                   const Divider(height: 1, thickness: 1),
                   const SizedBox(height: 32),
                   _buildSectionTitle('📌 프로젝트 소개', isDark),
@@ -109,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                     runSpacing: 10,
                     children: [
                       _buildTechChip('Flutter', isDark),
-                      _buildTechChip('Dart', isDark: isDark), // Note: Fixed typo in logic below
+                      _buildTechChip('Dart', isDark: isDark),
                       _buildTechChip('Firebase', isDark),
                       _buildTechChip('Git / GitHub', isDark),
                     ],
@@ -157,11 +154,11 @@ class _HomePageState extends State<HomePage> {
     return Text(
       title,
       style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-                        color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightAccent,
+        fontSize: 22,
+        fontWeight: FontWeight.w800,
+        color: isDark
+            ? AppColors.darkAccent
+            : AppColors.lightAccent,
       ),
     );
   }
@@ -179,8 +176,8 @@ class _HomePageState extends State<HomePage> {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
           color: isDark
               ? AppColors.darkTextPrimary
               : AppColors.lightTextPrimary,
@@ -212,7 +209,7 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         padding: const EdgeInsets.symmetric(vertical: 18),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           side: BorderSide(
             color: isPrimary ? Colors.transparent : (isDark ? Colors.white10 : Colors.black12),
           ),
@@ -232,7 +229,7 @@ class _HomePageState extends State<HomePage> {
     final bool isMobile = screenSize.width < 800;
     final bool isTablet = screenSize.width >= 800 && screenSize.width < 1200;
 
-    return Scaffold
+    return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: isDarkMode
           ? AppColors.darkPrimary
@@ -354,12 +351,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 24),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                           decoration: BoxDecoration(
                             color: isDarkMode
-                                ? Colors.white.withOpacity(0.05)
+                               ? Colors.white.withOpacity(0.05)
                                 : Colors.black.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(100),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isDarkMode ? Colors.white10 : Colors.black12,
+                              width: 0.5,
+                            ),
                           ),
                           child: Text(
                             '사용자 경험을 중시하며, 실제 작동하는 웹 프리뷰를 제공합니다.',
@@ -389,7 +390,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisCount: isTablet ? 2 : isMobile ? 1 : 3,
                 mainAxisSpacing: 32,
                 crossAxisSpacing: 32,
-                childAspectRatio: isMobile ? 0.8 : (isTablet ? 0.85 : 0.85),
+                childAspectRatio: isMobile ? 0.85 : (isTablet ? 0.85 : 0.85),
               ),
               delegate: SliverChildBuilderDelegate((context, idx) {
                 final Project project = projects[idx];
@@ -444,19 +445,19 @@ class _HomePageState extends State<HomePage> {
         onTap: () => _showProjectDetailModal(context, project, isDark),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withOpacity(0.03) : Colors.white,
-            borderRadius: BorderRadius.circular(32),
+            color: isDark ? AppColors.darkSecondary : AppColors.lightSecondary,
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+              color: isDark ? Colors.white10 : Colors.black12,
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
                 color: isDark
-                    ? Colors.black.withOpacity(0.5)
-                    : Colors.black.withOpacity(0.03),
-                blurRadius: 40,
-                offset: const Offset(0, 20),
+                    ? Colors.black.withOpacity(0.3)
+                    : Colors.black.withOpacity(0.05),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
@@ -494,8 +495,8 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           project.title,
                           style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900,
                             color: isDark
                                 ? AppColors.darkTextPrimary
                                 : AppColors.lightTextPrimary,
@@ -503,10 +504,11 @@ class _HomePageState extends State<HomePage> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
+                        const SizedBox(height: 8),
                         Text(
-                          project.stack,
+                          '${project.stack.split(',').join(' / ')}',
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: isDark
                                 ? AppColors.darkAccent
@@ -518,55 +520,60 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               Text(
                 project.description,
                 style: TextStyle(
                   fontSize: 14,
-                  height: 1.5,
+                  height: 1.6,
                   color: isDark
                       ? AppColors.darkTextSecondary
                           : AppColors.lightTextSecondary,
                 ),
                 overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+                maxLines: 3,
               ),
               const SizedBox(height: 20),
-              AspectRatio(
-                aspectRatio: 1280 / 600,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isDark ? Colors.white10 : Colors.black12,
-                    ),
-                    color: isDark ? Colors.black26 : Colors.grey[100],
+              // Preview Area
+              Container(
+                height: 200, // Fixed height for better grid consistency
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isDark ? Colors.white10 : Colors.black12,
+                    width: 0.5,
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: hasHomepage
-                        ? LayoutBuilder(
-                            builder: (context, constraints) {
-                              final double scale = constraints.maxWidth / 1280;
-                              return Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    width: 1280,
-                                    height: 600,
-                                    child: Transform.scale(
-                                      scale: scale,
-                                      alignment: Alignment.topLeft,
-                                      child: HtmlElementView(viewType: viewId),
-                                    ),
+                  color: isDark ? Colors.black26 : Colors.grey[100],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: hasHomepage
+                      ? LayoutBuilder(
+                          builder: (context, constraints) {
+                            final double scale = constraints.maxWidth / 1280;
+                            return Stack(
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  top: 0,
+                                  width: 1280,
+                                  height: 600,
+                                  child: Transform.scale(
+                                    scale: scale,
+                                    alignment: Alignment.topLeft,
+                                    child: HtmlElementView(viewType: viewId),
                                   ),
-                                ],
-                              );
-                            },
-                          )
-                        : _buildEmptyPreview(isDark),
-                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        : Center(
+                            child: Icon(
+                              Icons.visibility_off_outlined,
+                              size: 32,
+                              color: isDark ? Colors.white24 : Colors.black26,
+                            ),
+                          ),
                 ),
               ),
               const SizedBox(height: 20),

@@ -44,6 +44,7 @@ ThemeData getLightTheme() {
       bodyLarge: TextStyle(color: AppColors.lightTextPrimary),
       bodyMedium: TextStyle(color: AppColors.lightTextSecondary),
     ),
+    cardColor: AppColors.lightSecondary, // Added card color definition
   );
 }
 
@@ -66,5 +67,6 @@ ThemeData getDarkTheme() {
       bodyLarge: TextStyle(color: AppColors.darkTextPrimary),
       bodyMedium: TextStyle(color: AppColors.darkTextSecondary),
     ),
+    cardColor: AppColors.darkSecondary, // Added card color definition
   );
 }
