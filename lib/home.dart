@@ -615,7 +615,7 @@ class _HomePageState extends State<HomePage> {
             'Preview Unavailable',
             style: TextStyle(
               fontSize: 12,
-              color: isDark ? Colors.white38 : Colors.black338,
+              color: isDark ? Colors.white38 : Colors.black38,
             ),
           ),
         ],
