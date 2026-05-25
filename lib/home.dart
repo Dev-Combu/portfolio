@@ -25,7 +25,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // 프로젝트 상세 모달창을 띄우는 함수
   void _showProjectDetailModal(
     BuildContext context,
     Project project,
@@ -34,22 +33,26 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.6),
+      barrierColor: Colors.black.withOpacity(0.7),
       builder: (context) {
         final double screenWidth = MediaQuery.of(context).size.width;
         final bool isModalMobile = screenWidth < 700;
 
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(32),
+            side: BorderSide(
+              color: isDark ? Colors.white10 : Colors.black12,
+              width: 1,
+            ),
           ),
-          backgroundColor: isDark ? AppColors.darkPrimary : Colors.white,
+          backgroundColor: isDark ? AppColors.darkSecondary : Colors.white,
           insetPadding: EdgeInsets.symmetric(
-            horizontal: isModalMobile ? 16 : screenWidth * 0.2,
+            horizontal: isModalMobile ? 20 : screenWidth * 0.2,
             vertical: 40,
           ),
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 800),
+            constraints: const BoxConstraints(maxWidth: 850),
             padding: const EdgeInsets.all(32),
             child: SingleChildScrollView(
               child: Column(
@@ -63,8 +66,8 @@ class _HomePageState extends State<HomePage> {
                         child: Text(
                           project.title,
                           style: TextStyle(
-                            fontSize: isModalMobile ? 24 : 28,
-                            fontWeight: FontWeight.w800,
+                            fontSize: isModalMobile ? 26 : 32,
+                            fontWeight: FontWeight.w900,
                             color: isDark
                                 ? AppColors.darkTextPrimary
                                 : AppColors.lightTextPrimary,
@@ -74,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: Icon(
-                          Icons.close,
+                          Icons.close_rounded,
                           color: isDark
                               ? AppColors.darkTextSecondary
                               : AppColors.lightTextSecondary,
@@ -83,105 +86,59 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  const Divider(height: 32, thickness: 1),
-                  Text(
-                    '📌 프로젝트 소개',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightAccent,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
+                  const Divider(height: 1, thickness: 1),
+                  const SizedBox(height: 32),
+                  _buildSectionTitle('📌 프로젝트 소개', isDark),
+                  const SizedBox(height: 12),
                   Text(
                     project.description,
                     style: TextStyle(
-                      fontSize: 15,
-                      height: 1.6,
-                      color: isDark
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    '🛠️ 사용 기술 및 도구',
-                    style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      height: 1.7,
                       color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightAccent,
+                          ? AppColors.darkTextSecondary
+                          : AppColors.lightTextSecondary,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 32),
+                  _buildSectionTitle('🛠️ 사용 기술 및 도구', isDark),
+                  const SizedBox(height: 16),
                   Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                    spacing: 10,
+                    runSpacing: 10,
                     children: [
                       _buildTechChip('Flutter', isDark),
-                      _buildTechChip('Dart', isDark),
+                      _buildTechChip('Dart', isDark: isDark), // Note: Fixed typo in logic below
                       _buildTechChip('Firebase', isDark),
                       _buildTechChip('Git / GitHub', isDark),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 40),
                   Row(
                     children: [
                       Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            final uri = Uri.parse(project.link);
-                            if (await canLaunchUrl(uri)) await launchUrl(uri);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: isDark
-                                ? Colors.white10
-                                : Colors.grey[200],
-                            foregroundColor: isDark
-                                ? Colors.white
-                                : Colors.black87,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                          icon: const Icon(Icons.code, size: 20),
-                          label: const Text(
-                            'GitHub 소스코드',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                        child: _buildActionButton(
+                          context: context,
+                          icon: Icons.code_rounded,
+                          label: 'GitHub 소스코드',
+                          url: project.link,
+                          isDark: isDark,
+                          isPrimary: false,
                         ),
                       ),
                       if (project.homepage != null &&
                           project.homepage != 'null' &&
                           project.homepage!.isNotEmpty) ...[
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 16),
                         Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () async {
-                              final uri = Uri.parse(project.homepage!);
-                              if (await canLaunchUrl(uri)) await launchUrl(uri);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: isDark
-                                  ? AppColors.darkAccent
-                                  : AppColors.lightAccent,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                            ),
-                            icon: const Icon(Icons.launch, size: 20),
-                            label: const Text(
-                              '라이브 웹 보러가기',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
+                          child: _buildActionButton(
+                            context: context,
+                            icon: Icons.language_rounded,
+                            label: '라이브 웹 보기',
+                            url: project.homepage!,
+                            isDark: isDark,
+                            isPrimary: true,
                           ),
                         ),
                       ],
@@ -196,23 +153,75 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildTechChip(String label, bool isDark) {
+  Widget _buildSectionTitle(String title, bool isDark) {
+    return Text(
+      title,
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+                        color: isDark
+                          ? AppColors.darkAccent
+                          : AppColors.lightAccent,
+      ),
+    );
+  }
+
+  Widget _buildTechChip(String label, {required bool isDark}) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isDark ? Colors.white.withOpacity(0.08) : Colors.grey[100],
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: isDark ? Colors.white10 : Colors.black12),
+        color: isDark ? Colors.white.withOpacity(0.05) : Colors.black.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(100),
+        border: Border.all(
+          color: isDark ? Colors.white10 : Colors.black12,
+        ),
       ),
       child: Text(
         label,
         style: TextStyle(
           fontSize: 13,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           color: isDark
               ? AppColors.darkTextPrimary
               : AppColors.lightTextPrimary,
         ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required String url,
+    required bool isDark,
+    required bool isPrimary,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: () async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) await launchUrl(uri);
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isPrimary
+            ? AppColors.accentGradient.colors[0]
+            : (isDark ? Colors.white10 : Colors.black.withOpacity(0.05)),
+        foregroundColor: isPrimary
+            ? Colors.white
+            : (isDark ? AppColors.darkTextPrimary : AppColors.lightTextPrimary),
+        elevation: 0,
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: isPrimary ? Colors.transparent : (isDark ? Colors.white10 : Colors.black12),
+          ),
+        ),
+      ),
+      icon: Icon(icon, size: 20),
+      label: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );
   }
@@ -223,7 +232,7 @@ class _HomePageState extends State<HomePage> {
     final bool isMobile = screenSize.width < 800;
     final bool isTablet = screenSize.width >= 800 && screenSize.width < 1200;
 
-    return Scaffold(
+    return Scaffold
       extendBodyBehindAppBar: true,
       backgroundColor: isDarkMode
           ? AppColors.darkPrimary
@@ -232,107 +241,141 @@ class _HomePageState extends State<HomePage> {
         title: Text(
           'DEV.PORTFOLIO',
           style: TextStyle(
-            fontSize: 20,
-            color: isDarkMode ? AppColors.lightPrimary : AppColors.darkPrimary,
-            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.w900,
+            color: isDarkMode
+                ? AppColors.darkTextPrimary
+                : AppColors.lightTextPrimary,
           ),
         ),
-        // 💡 1. 기본 배경과 오버레이를 완벽히 투명하게 뚫어줍니다.
         backgroundColor: Colors.transparent,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-
-        // 💡 2. 앱바 뒤에 블러 필터를 장착합니다.
         flexibleSpace: ClipRect(
           child: BackdropFilter(
-            // sigmaX, sigmaY 값이 커질수록 뒤가 더 희미(뭉개짐)하게 보입니다. 10~15 사이를 추천합니다.
-            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            filter: ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
             child: Container(
-              // 💡 3. 블러 필터 위에 아주 살짝 반투명한 베일을 얹어주어야 글래스 효과가 극대화됩니다.
               color: isDarkMode
-                  ? AppColors.darkPrimary.withOpacity(0.7) // 다크모드일 때 어두운 반투명
-                  : Colors.white.withOpacity(0.6), // 라이트모드일 때 밝은 반투명
+                  ? AppColors.darkPrimary.withOpacity(0.7)
+                  : AppColors.lightPrimary.withOpacity(0.7),
             ),
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              isDarkMode ? Icons.light_mode : Icons.dark_mode,
-              color: isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
+          Container(
+            margin: const EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(
+              color: isDarkMode ? Colors.white10 : Colors.black.withOpacity(0.05),
+              shape: BoxShape.circle,
             ),
-            onPressed: toggleTheme,
+            child: IconButton(
+              icon: Icon(
+                isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                color: isDarkMode
+                    ? AppColors.darkTextPrimary
+                    : AppColors.lightTextPrimary,
+              ),
+              onPressed: toggleTheme,
+            ),
           ),
           if (!isMobile) ...[
-            _navItem(
-              'About',
-              isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-            _navItem(
-              'Projects',
-              isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
-            _navItem(
-              'Contact',
-              isDarkMode
-                  ? AppColors.darkTextSecondary
-                  : AppColors.lightTextSecondary,
-            ),
+            _navItem('About', isDarkMode),
+            _navItem('Projects', isDarkMode),
+            _navItem('Contact', isDarkMode),
             const SizedBox(width: 20),
           ],
         ],
       ),
       body: CustomScrollView(
         slivers: [
-          // Hero section
+          // Hero section with Spotlight Effect
           SliverToBoxAdapter(
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: isMobile ? 24 : screenSize.width * 0.1,
-                vertical: 100,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '안녕하세요,',
-                    style: TextStyle(
-                      fontSize: isMobile ? 24 : 32,
-                      fontWeight: FontWeight.w600,
-                      color: isDarkMode
-                          ? AppColors.darkAccent
-                          : AppColors.lightAccent,
-                    ),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 1000),
+              builder: (context, value, child) {
+                return Opacity(
+                  opacity: value,
+                  child: Transform.translate(
+                    offset: Offset(0, 30 * (1 - value)),
+                    child: child,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '앱 개발자 차부곤입니다!',
-                    style: TextStyle(
-                      fontSize: isMobile ? 40 : 64,
-                      fontWeight: FontWeight.w800,
-                      color: isDarkMode
-                          ? AppColors.darkTextPrimary
-                          : AppColors.lightTextPrimary,
+                );
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 24 : screenSize.width * 0.1,
+                  vertical: 120,
+                ),
+                child: Stack(
+                  children: [
+                    // Spotlight Background
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(
+                            center: const Alignment(0, -0.5),
+                            radius: 1.5,
+                            colors: [
+                              isDarkMode
+                                  ? AppColors.darkAccent.withOpacity(0.15)
+                                  : AppColors.lightAccent.withOpacity(0.1),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    '사용자 경험을 중시하며, 실제 작동하는 웹 프리뷰 뷰어를 제공합니다.',
-                    style: TextStyle(
-                      fontSize: 18,
-                      height: 1.6,
-                      color: isDarkMode
-                          ? AppColors.darkTextSecondary
-                          : AppColors.lightTextSecondary,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '안녕하세요,',
+                          style: TextStyle(
+                            fontSize: isMobile ? 26 : 36,
+                            fontWeight: FontWeight.w500,
+                            color: isDarkMode
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          '앱 개발자 차부곤입니다!',
+                          style: TextStyle(
+                            fontSize: isMobile ? 48 : 72,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: -2,
+                            color: isDarkMode
+                                ? AppColors.darkTextPrimary
+                                : AppColors.lightTextPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? Colors.white.withOpacity(0.05)
+                                : Colors.black.withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          child: Text(
+                            '사용자 경험을 중시하며, 실제 작동하는 웹 프리뷰를 제공합니다.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              height: 1.5,
+                              color: isDarkMode
+                                  ? AppColors.darkTextSecondary
+                                  : AppColors.lightTextSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -343,20 +386,27 @@ class _HomePageState extends State<HomePage> {
             ),
             sliver: SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: isTablet
-                    ? 2
-                    : isMobile
-                    ? 1
-                    : 3,
-                mainAxisSpacing: 24,
-                crossAxisSpacing: 24,
-                // 💡 수정 1: 웹 프리뷰 높이가 줄어들었으므로, 카드의 종횡비(가로 대비 세로 비율)를 더 늘려 세로를 슬림하게 만듭니다.
-                // 값이 커질수록 카드의 세로 길이가 줄어듭니다.
-                childAspectRatio: isMobile ? 0.78 : (isTablet ? 0.85 : 0.85),
+                crossAxisCount: isTablet ? 2 : isMobile ? 1 : 3,
+                mainAxisSpacing: 32,
+                crossAxisSpacing: 32,
+                childAspectRatio: isMobile ? 0.8 : (isTablet ? 0.85 : 0.85),
               ),
               delegate: SliverChildBuilderDelegate((context, idx) {
                 final Project project = projects[idx];
-                return _buildProjectCard(project, isDarkMode, idx);
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: Duration(milliseconds: 600 + (idx * 200)),
+                  builder: (context, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.translate(
+                        offset: Offset(0, 20 * (1 - value)),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: _buildProjectCard(project, isDarkMode, idx),
+                );
               }, childCount: projects.length),
             ),
           ),
@@ -375,13 +425,11 @@ class _HomePageState extends State<HomePage> {
     final String viewId = 'iframe-view-$index';
 
     if (hasHomepage) {
-      ui_web.platformViewRegistry.registerViewFactory(viewId, (int viewId) {
+      ui_web.platformViewRegistry.registerViewFactory(viewLT_viewId(viewId), (int viewId) {
         final element = web.HTMLIFrameElement()
           ..src = project.homepage!
           ..style.border = 'none'
           ..style.width = '1280px'
-          // 💡 수정 2: 기존 800px에서 600px로 세로 가상 스크린 높이를 대폭 줄였습니다.
-          // 이렇게 하면 데스크톱의 얇고 와이드한 모니터 비율로 예시가 축소 렌더링됩니다.
           ..style.height = '600px'
           ..style.transformOrigin = 'top left'
           ..style.pointerEvents = 'none';
@@ -396,48 +444,49 @@ class _HomePageState extends State<HomePage> {
         onTap: () => _showProjectDetailModal(context, project, isDark),
         child: Container(
           decoration: BoxDecoration(
-            color: isDark ? Colors.white.withOpacity(0.05) : Colors.white,
-            borderRadius: BorderRadius.circular(24),
+            color: isDark ? Colors.white.withOpacity(0.03) : Colors.white,
+            borderRadius: BorderRadius.circular(32),
             border: Border.all(
-              color: isDark ? AppColors.borderDark : AppColors.borderLight,
+              color: isDark ? Colors.white10 : Colors.black.withOpacity(0.05),
+              width: 1,
             ),
-            boxShadow: isDark
-                ? []
-                : [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
+            boxShadow: [
+              BoxShadow(
+                color: isDark
+                    ? Colors.black.withOpacity(0.5)
+                    : Colors.black.withOpacity(0.03),
+                blurRadius: 40,
+                offset: const Offset(0, 20),
+              ),
+            ],
           ),
           padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. 상단 헤더 영역
               Row(
                 children: [
                   Container(
-                    height: 40,
-                    width: 40,
+                    height: 48,
+                    width: 48,
                     decoration: BoxDecoration(
-                      color:
-                          (isDark
-                                  ? AppColors.darkAccent
-                                  : AppColors.lightAccent)
-                              .withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(10),
+                      gradient: AppColors.accentGradient,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.accentGradient.colors[0].withOpacity(0.3),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Icon(
-                      hasHomepage ? Icons.language : Icons.code,
-                      color: isDark
-                          ? AppColors.darkAccent
-                          : AppColors.lightAccent,
-                      size: 20,
+                      hasHomepage ? Icons.language_rounded : Icons.code_rounded,
+                      color: Colors.white,
+                      size: 24,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -455,12 +504,13 @@ class _HomePageState extends State<HomePage> {
                           maxLines: 1,
                         ),
                         Text(
-                          "# ${project.stack}",
+                          project.stack,
                           style: TextStyle(
-                            fontSize: 11,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
                             color: isDark
-                                ? AppColors.darkTextSecondary
-                                : AppColors.lightTextSecondary,
+                                ? AppColors.darkAccent
+                                : AppColors.lightAccent,
                           ),
                         ),
                       ],
@@ -468,45 +518,36 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
-
-              // 2. 프로젝트 설명 영역
+              const SizedBox(height: 20),
               Text(
                 project.description,
                 style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
+                  fontSize: 14,
+                  height: 1.5,
                   color: isDark
                       ? AppColors.darkTextSecondary
-                      : AppColors.lightTextSecondary,
+                          : AppColors.lightTextSecondary,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
-              const SizedBox(height: 14),
-
-              // 3. 미니어처 프리뷰 영역 (가로세로 비율 최적화 버전)
+              const SizedBox(height: 20),
               AspectRatio(
-                // 💡 가상 가로(1280)와 가상 세로(600)의 비율을 그대로 강제합니다. (약 2.13:1)
-                // 이렇게 하면 브라우저 크기가 바뀌어도 이 칸은 언제나 웹사이트와 똑같은 비율로 늘어나고 줄어듭니다.
                 aspectRatio: 1280 / 600,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: isDark ? Colors.white10 : Colors.black12,
                     ),
-                    color: isDark ? Colors.black26 : Colors.grey[50],
+                    color: isDark ? Colors.black26 : Colors.grey[100],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(20),
                     child: hasHomepage
                         ? LayoutBuilder(
                             builder: (context, constraints) {
-                              // 이제 constraints.maxWidth에 맞춰 scale을 구하면,
-                              // AspectRatio 덕분에 높이도 딱 정확한 비율만큼 확보되어 있습니다.
                               final double scale = constraints.maxWidth / 1280;
-
                               return Stack(
                                 children: [
                                   Positioned(
@@ -524,152 +565,25 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           )
-                        : Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.public_off,
-                                  size: 32, // 카드가 슬림해졌으므로 아이콘 크기 살짝 조절
-                                  color: isDark
-                                      ? Colors.white24
-                                      : Colors.black26,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '라이브 홍보 페이지가\n준비되지 않았습니다.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    height: 1.4,
-                                    color: isDark
-                                        ? Colors.white38
-                                        : Colors.black38,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: isDark
-                                          ? AppColors.darkAccent
-                                          : AppColors.lightAccent,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.info_outline,
-                                        size: 12,
-                                        color: isDark
-                                            ? AppColors.darkAccent
-                                            : AppColors.lightAccent,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        '상세 정보 보기',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: isDark
-                                              ? AppColors.darkAccent
-                                              : AppColors.lightAccent,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                        : _buildEmptyPreview(isDark),
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
-
-              // 4. 하단 링크 영역
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // GitHub / repository link
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.link,
-                        size: 18,
-                        color: isDark ? Colors.white38 : Colors.black38,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            final uri = Uri.parse(project.link);
-                            if (!await launchUrl(uri)) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'GitHub 연결을 거부했습니다. URL: ${project.link}',
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          child: Text(
-                            project.link,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: isDark ? Colors.white38 : Colors.black38,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                          ),
-                        ),
-                      ),
-                    ],
+                  _buildSmallLink(
+                    Icons.link_rounded,
+                    project.link,
+                    isDark,
                   ),
-                  // Homepage link
-                  if (hasHomepage) ...[
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.public,
-                          size: 18,
-                          color: isDark ? Colors.white38 : Colors.black38,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: InkWell(
-                            onTap: () async {
-                              final uri = Uri.parse(project.homepage!);
-                              if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri);
-                              }
-                            },
-                            child: Text(
-                              project.homepage!,
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: isDark ? Colors.white38 : Colors.black38,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.fade,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ),
-                      ],
+                  if (hasHomepage)
+                    _buildSmallLink(
+                      Icons.open_in_new_rounded,
+                      'Live Demo',
+                      isDark,
                     ),
-                  ],
                 ],
               ),
             ],
@@ -679,15 +593,64 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _navItem(String title, Color color) {
+  Widget _buildEmptyPreview(bool isDark) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.visibility_off_outlined,
+            size: 32,
+            color: isDark ? Colors.white24 : Colors.black26,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Preview Unavailable',
+            style: TextStyle(
+              fontSize: 12,
+              color: isDark ? Colors.white38 : Colors.black338,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmallLink(IconData icon, String label, bool isDark) {
+    return Row(
+      children: [
+        Icon(icon, size: 14, color: isDark ? Colors.white38 : Colors.black38),
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: isDark ? Colors.white38 : Colors.black38,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _navItem(String title, bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Center(
         child: Text(
           title,
-          style: TextStyle(color: color, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: isDark
+                ? AppColors.darkTextSecondary
+                : AppColors.lightTextSecondary,
+            fontWeight: FontWeight.w600,
+            fontSize: 15,
+          ),
         ),
       ),
     );
   }
 }
+
+// Helper to handle the viewId string formatting
+String LT_viewId(String id) => id;
