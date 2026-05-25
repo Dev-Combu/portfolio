@@ -345,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.w900,
                             letterSpacing: -2,
                             color: isDarkMode
-                                ? AppColors.darkTextPrimary
+                               ? AppColors.darkTextPrimary
                                 : AppColors.lightTextPrimary,
                           ),
                         ),
@@ -369,7 +369,7 @@ class _HomePageState extends State<HomePage> {
                               height: 1.5,
                               color: isDarkMode
                                   ? AppColors.darkTextSecondary
-                                  : AppColors.lightTextSecondary,
+                                 : AppColors.lightTextSecondary,
                             ),
                           ),
                         ),
