@@ -105,10 +105,10 @@ class _HomePageState extends State<HomePage> {
                     spacing: 10,
                     runSpacing: 10,
                     children: [
-                      _buildTechChip('Flutter', isDark),
+                      _buildTechChip('Flutter', isDark: isDark),
                       _buildTechChip('Dart', isDark: isDark),
-                      _buildTechChip('Firebase', isDark),
-                      _buildTechChip('Git / GitHub', isDark),
+                      _buildTechChip('Firebase', isDark: isDark),
+                      _buildTechChip('Git / GitHub', isDark: isDark),
                     ],
                   ),
                   const SizedBox(height: 40),
@@ -330,7 +330,7 @@ class _HomePageState extends State<HomePage> {
                         Text(
                           '안녕하세요,',
                           style: TextStyle(
-                            fontSize: isMobile ? 26 : 36,
+                            fontSize: isMobile ? 24 : 36,
                             fontWeight: FontWeight.w500,
                             color: isDarkMode
                                 ? AppColors.darkAccent
@@ -338,15 +338,18 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Text(
-                          '앱 개발자 차부곤입니다!',
-                          style: TextStyle(
-                            fontSize: isMobile ? 48 : 72,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -2,
-                            color: isDarkMode
-                               ? AppColors.darkTextPrimary
-                                : AppColors.lightTextPrimary,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '앱 개발자 차부곤입니다!',
+                            style: TextStyle(
+                              fontSize: isMobile ? 42 : 72,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -2,
+                              color: isDarkMode
+                                  ? AppColors.darkTextPrimary
+                                  : AppColors.lightTextPrimary,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -390,7 +393,7 @@ class _HomePageState extends State<HomePage> {
                 crossAxisCount: isTablet ? 2 : isMobile ? 1 : 3,
                 mainAxisSpacing: 32,
                 crossAxisSpacing: 32,
-                childAspectRatio: isMobile ? 0.85 : (isTablet ? 0.85 : 0.85),
+                mainAxisExtent: 480, // Fixed height to prevent overflow on resize
               ),
               delegate: SliverChildBuilderDelegate((context, idx) {
                 final Project project = projects[idx];
@@ -426,7 +429,7 @@ class _HomePageState extends State<HomePage> {
     final String viewId = 'iframe-view-$index';
 
     if (hasHomepage) {
-      ui_web.platformViewRegistry.registerViewFactory(viewLT_viewId(viewId), (int viewId) {
+      ui_web.platformViewRegistry.registerViewFactory(LT_viewId(viewId), (int viewId) {
         final element = web.HTMLIFrameElement()
           ..src = project.homepage!
           ..style.border = 'none'
@@ -566,7 +569,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             );
-                          }
+                          })
                         : Center(
                             child: Icon(
                               Icons.visibility_off_outlined,
@@ -574,23 +577,25 @@ class _HomePageState extends State<HomePage> {
                               color: isDark ? Colors.white24 : Colors.black26,
                             ),
                           ),
-                ),
+                )
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSmallLink(
                     Icons.link_rounded,
                     project.link,
                     isDark,
                   ),
-                  if (hasHomepage)
+                  if (hasHomepage) ...[
+                    const SizedBox(height: 8),
                     _buildSmallLink(
                       Icons.open_in_new_rounded,
-                      'Live Demo',
+                      project.homepage!,
                       isDark,
                     ),
+                  ],
                 ],
               ),
             ],
@@ -615,7 +620,7 @@ class _HomePageState extends State<HomePage> {
             'Preview Unavailable',
             style: TextStyle(
               fontSize: 12,
-              color: isDark ? Colors.white38 : Colors.black338,
+              color: isDark ? Colors.white38 : Colors.black38,
             ),
           ),
         ],
@@ -628,12 +633,16 @@ class _HomePageState extends State<HomePage> {
       children: [
         Icon(icon, size: 14, color: isDark ? Colors.white38 : Colors.black38),
         const SizedBox(width: 6),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: isDark ? Colors.white38 : Colors.black38,
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: isDark ? Colors.white38 : Colors.black38,
+            ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         ),
       ],
